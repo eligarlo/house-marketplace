@@ -1,5 +1,15 @@
+import { BrowserRouter as Router } from 'react-router-dom'
+import Routes from 'Routes'
+
 const App: React.FC = () => {
-  return <div>House Marketplace</div>
+  return (
+    <>
+      <Router>
+        <Routes />
+      </Router>
+      {/* Navbar */}
+    </>
+  )
 }
 
 export default App

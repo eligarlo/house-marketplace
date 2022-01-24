@@ -1,4 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom'
+import Navbar from 'components/layout/Navbar'
 import Routes from 'Routes'
 
 const App: React.FC = () => {
@@ -6,8 +7,8 @@ const App: React.FC = () => {
     <>
       <Router>
         <Routes />
+        <Navbar />
       </Router>
-      {/* Navbar */}
     </>
   )
 }

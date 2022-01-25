@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db } from 'firebase.config'
+import { toast } from 'react-toastify'
 import { ISignUpForm } from 'utils/SharedUtils'
 import { ReactComponent as ArrowRightIcon } from 'assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from 'assets/svg/visibilityIcon.svg'
@@ -26,7 +27,14 @@ const SignUp: React.FC = () => {
 
   const handleOnSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (name.trim() !== '' && email.trim() !== '' && password && password.trim() !== '') {
+    if (
+      name &&
+      name.trim() !== '' &&
+      email &&
+      email.trim() !== '' &&
+      password &&
+      password.trim() !== ''
+    ) {
       try {
         console.log(db)
         const auth = getAuth()
@@ -49,7 +57,7 @@ const SignUp: React.FC = () => {
 
         navigate('/')
       } catch (e) {
-        console.log(e)
+        toast.error('Something went wrong with registration')
       }
     }
   }

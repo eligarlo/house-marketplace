@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { toast } from 'react-toastify'
 import { ISignInForm } from 'utils/SharedUtils'
 import { ReactComponent as ArrowRightIcon } from 'assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from 'assets/svg/visibilityIcon.svg'
@@ -24,7 +25,7 @@ const SignIn: React.FC = () => {
 
   const handleOnSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (email.trim() !== '' && password && password.trim() !== '') {
+    if (email && email.trim() !== '' && password && password.trim() !== '') {
       try {
         const auth = getAuth()
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
@@ -33,7 +34,7 @@ const SignIn: React.FC = () => {
           navigate('/')
         }
       } catch (error) {
-        console.log(error)
+        toast.error('Bad User Credentials')
       }
     }
   }

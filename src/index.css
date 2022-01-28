@@ -669,9 +669,11 @@ button {
   margin: 0.3rem 0;
   font-weight: 600;
   width: 100%;
+  padding: 10px;
 }
 .profileNameActive {
   background-color: rgba(44, 44, 44, 0.1);
+  width: 95%;
 }
 
 .profileEmail,

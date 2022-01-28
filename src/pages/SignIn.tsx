@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { toast } from 'react-toastify'
-import { ISignInForm } from 'utils/SharedUtils'
+import { IUser } from 'utils/SharedUtils'
 import { ReactComponent as ArrowRightIcon } from 'assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from 'assets/svg/visibilityIcon.svg'
 
 const SignIn: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [formData, setFormData] = useState<ISignInForm>({} as ISignInForm)
+  const [formData, setFormData] = useState<IUser>({} as IUser)
 
   const { email, password } = formData
 

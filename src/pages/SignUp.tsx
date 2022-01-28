@@ -4,13 +4,13 @@ import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db } from 'firebase.config'
 import { toast } from 'react-toastify'
-import { ISignUpForm } from 'utils/SharedUtils'
+import { IUser } from 'utils/SharedUtils'
 import { ReactComponent as ArrowRightIcon } from 'assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from 'assets/svg/visibilityIcon.svg'
 
 const SignUp: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [formData, setFormData] = useState<ISignUpForm>({} as ISignUpForm)
+  const [formData, setFormData] = useState<IUser>({} as IUser)
 
   const { name, email, password } = formData
 

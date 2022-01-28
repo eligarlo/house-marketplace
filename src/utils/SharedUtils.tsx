@@ -1,11 +1,13 @@
 import { FieldValue } from 'firebase/firestore'
 
-export interface ISignInForm {
+export interface IUser {
   email: string
-  password: string | undefined
+  password?: string | undefined
+  name: string
+  timeStamp?: FieldValue
 }
 
-export interface ISignUpForm extends ISignInForm {
-  name: string
-  timeStamp: FieldValue
+export interface IAuthUser {
+  name: string | undefined
+  email: string | undefined
 }

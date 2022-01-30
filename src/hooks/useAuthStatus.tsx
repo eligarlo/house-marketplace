@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 export const useAuthStatus = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-  const [checkingStatus, setCheckingStatus] = useState<boolean>(false)
+  const [checkingStatus, setCheckingStatus] = useState<boolean>(true)
   const isMounted = useRef<boolean>(true)
 
   useEffect(() => {
@@ -12,8 +12,6 @@ export const useAuthStatus = () => {
       onAuthStateChanged(auth, user => {
         if (user) {
           setIsLoggedIn(true)
-          // check why setIsLoggedIn not updating to true
-          console.log('isLoggedIn', isLoggedIn)
         }
         setCheckingStatus(false)
       })
@@ -26,5 +24,3 @@ export const useAuthStatus = () => {
 
   return { isLoggedIn, checkingStatus }
 }
-
-export default useAuthStatus

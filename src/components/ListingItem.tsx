@@ -56,7 +56,7 @@ const ListingItem: React.FC<IListingItemProps> = ({ listing, onDelete }) => {
         <DeleteIcon
           className='removeIcon'
           fill='rgb(231, 76, 60'
-          onClick={() => onDelete(id, name)}
+          onClick={() => id && onDelete(id, name)}
         />
       )}
     </li>

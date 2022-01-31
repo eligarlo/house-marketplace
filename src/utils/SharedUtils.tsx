@@ -13,7 +13,8 @@ export interface IAuthUser {
 }
 
 export interface IListing {
-  id: string
+  id?: string
+  userRef?: string
   bathrooms: number
   bedrooms: number
   regularPrice: number
@@ -25,7 +26,7 @@ export interface IListing {
   name: string
   offer: boolean
   parking: boolean
-  timestamp: FieldValue
+  timestamp?: FieldValue
   type: string
 }
 

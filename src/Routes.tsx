@@ -1,6 +1,7 @@
 import { useRoutes } from 'react-router-dom'
 import Explore from 'pages/Explore'
 import Offers from 'pages/Offers'
+import Category from 'pages/Category'
 import Profile from 'pages/Profile'
 import SignIn from 'pages/SignIn'
 import SignUp from 'pages/SignUp'
@@ -16,6 +17,10 @@ const Routes: React.FC = () => {
     {
       path: '/offers',
       element: <Offers />,
+    },
+    {
+      path: '/category/:categoryName',
+      element: <Category />,
     },
     {
       path: '/profile',

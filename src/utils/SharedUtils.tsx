@@ -11,3 +11,25 @@ export interface IAuthUser {
   name: string | undefined
   email: string | undefined
 }
+
+export interface IListing {
+  id: string
+  bathrooms: number
+  bedrooms: number
+  regularPrice: number
+  discountedPrice: number
+  furnished: boolean
+  geolocation: IGeolocation
+  imageUrls: string[]
+  location: string
+  name: string
+  offer: boolean
+  parking: boolean
+  timestamp: FieldValue
+  type: string
+}
+
+export interface IGeolocation {
+  lat: number
+  lng: number
+}

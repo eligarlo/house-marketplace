@@ -1,6 +1,6 @@
 const Spinner: React.FC = () => {
   return (
-    <div className='spinnerContainer'>
+    <div className='loadingSpinnerContainer'>
       <div className='loadingSpinner'></div>
     </div>
   )

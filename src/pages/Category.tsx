@@ -4,6 +4,7 @@ import { collection, getDocs, query, where, orderBy, limit, startAfter } from 'f
 import { db } from 'firebase.config'
 import { toast } from 'react-toastify'
 import Spinner from 'components/Spinner'
+import ListingItem from 'components/ListingItem'
 import { IListing } from 'utils/SharedUtils'
 
 const Category: React.FC = () => {
@@ -60,7 +61,7 @@ const Category: React.FC = () => {
         <main>
           <ul className='categoryListings'>
             {listings.map(listing => (
-              <h3>{listing.name}</h3>
+              <ListingItem key={listing.id} listing={listing} />
             ))}
           </ul>
         </main>

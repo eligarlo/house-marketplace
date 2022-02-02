@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { db } from 'firebase.config'
+import { v4 as uuidv4 } from 'uuid'
 import Spinner from 'components/Spinner'
-import { IListing } from 'utils/SharedUtils'
+import { IImageUpload, IListing } from 'utils/SharedUtils'
 import { toast } from 'react-toastify'
 
 const CreateListing: React.FC = () => {
   const [geolocationEnabled, setGeolocationEnabled] = useState<boolean>(true)
   const [isLoading, setLoading] = useState<boolean>(false)
+  const [files, setFiles] = useState<[]>([])
   const [formData, setFormData] = useState<IListing>({
     type: 'rent',
     name: '',
@@ -91,6 +95,56 @@ const CreateListing: React.FC = () => {
       }
     }
 
+    // Store images in firebase
+    const storeImage = async (image: File) => {
+      return new Promise((resolve, reject) => {
+        const storage = getStorage()
+        const fileName = `${auth.currentUser?.uid}-${image.name}-${uuidv4()}`
+
+        const storageRef = ref(storage, 'images/' + fileName)
+        const uploadTask = uploadBytesResumable(storageRef, image)
+
+        uploadTask.on(
+          'state_changed',
+          snapshot => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            console.log('Upload is ' + progress + '% done')
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused')
+                break
+              case 'running':
+                console.log('Upload is running')
+                break
+            }
+          },
+          error => {
+            switch (error.code) {
+              case 'storage/unauthorized':
+                reject('unauthorized')
+                break
+              case 'storage/canceled':
+                reject('canceled')
+                break
+              case 'storage/unknown':
+                reject('storage not found')
+                break
+            }
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+              resolve(downloadURL)
+            })
+          }
+        )
+      })
+    }
+
+    const imgUrls = await Promise.all([...files].map(image => storeImage(image))).catch(error => {
+      setLoading(false)
+      return toast.error('Images not uploaded')
+    })
+
     setLoading(false)
   }
 
@@ -106,10 +160,7 @@ const CreateListing: React.FC = () => {
 
     // Files
     if (e.target.files) {
-      setFormData(prevState => ({
-        ...prevState,
-        images: e.target.files,
-      }))
+      setFiles(e.target.files)
     }
 
     if (!e.target.files) {
@@ -350,7 +401,7 @@ const CreateListing: React.FC = () => {
           <input
             className='formInputFile'
             type='file'
-            id='images'
+            id='imageUrls'
             onChange={onMutate}
             max='6'
             accept='.jpg,.png,.jpeg'

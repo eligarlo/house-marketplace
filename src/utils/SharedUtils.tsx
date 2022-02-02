@@ -34,3 +34,7 @@ export interface IGeolocation {
   lat: number | any
   lng: number | any
 }
+
+export interface IImageUpload {
+  name: string
+}

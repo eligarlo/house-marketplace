@@ -22,7 +22,7 @@ export interface IListing {
   furnished: boolean
   geolocation: IGeolocation
   imageUrls: string[]
-  location: string
+  location: string | undefined
   name: string
   offer: boolean
   parking: boolean
@@ -31,6 +31,6 @@ export interface IListing {
 }
 
 export interface IGeolocation {
-  lat: number
-  lng: number
+  lat: number | any
+  lng: number | any
 }

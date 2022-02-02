@@ -3,6 +3,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import Spinner from 'components/Spinner'
 import { IListing } from 'utils/SharedUtils'
+import { toast } from 'react-toastify'
 
 const CreateListing: React.FC = () => {
   const [geolocationEnabled, setGeolocationEnabled] = useState<boolean>(true)
@@ -32,10 +33,11 @@ const CreateListing: React.FC = () => {
     furnished,
     geolocation,
     imageUrls,
-    location,
     offer,
     parking,
   } = formData
+
+  let { location } = formData
 
   const auth = getAuth()
   const navigate = useNavigate()
@@ -58,8 +60,38 @@ const CreateListing: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted, auth, navigate])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
+
+    if (discountedPrice >= regularPrice) {
+      setLoading(false)
+      return toast.error('Discounted price needs to be less than regular price')
+    }
+
+    if (imageUrls.length > 6) {
+      setLoading(false)
+      return toast.error('Max 6 images')
+    }
+
+    if (geolocationEnabled) {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.REACT_APP_GEOLOCATION_KEY}`
+      )
+      const data = await response.json()
+
+      geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
+      geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
+
+      location = data.status === 'ZERO_RESULTS' ? undefined : data.results[0]?.formatted_address
+
+      if (location === undefined || location.includes('undefined')) {
+        setLoading(false)
+        return toast.error('Please enter a correct address')
+      }
+    }
+
+    setLoading(false)
   }
 
   const onMutate = (e: any) => {
@@ -80,12 +112,26 @@ const CreateListing: React.FC = () => {
       }))
     }
 
-    // Text/Booleans/Numbers
     if (!e.target.files) {
-      setFormData(prevState => ({
-        ...prevState,
-        [e.target.id]: boolean ?? e.target.value,
-      }))
+      if (e.target.id === 'lat') {
+        // Latitude
+        setFormData(prevState => ({
+          ...prevState,
+          geolocation: { lat: e.target.value, lng: geolocation.lng },
+        }))
+      } else if (e.target.id === 'lng') {
+        // Longitude
+        setFormData(prevState => ({
+          ...prevState,
+          geolocation: { lat: geolocation.lat, lng: e.target.value },
+        }))
+      } else {
+        // Text/Booleans/Numbers
+        setFormData(prevState => ({
+          ...prevState,
+          [e.target.id]: boolean ?? e.target.value,
+        }))
+      }
     }
   }
 
@@ -226,7 +272,7 @@ const CreateListing: React.FC = () => {
                 <input
                   className='formInputSmall'
                   type='number'
-                  id='latitude'
+                  id='lat'
                   value={geolocation.lat}
                   onChange={onMutate}
                   required
@@ -237,7 +283,7 @@ const CreateListing: React.FC = () => {
                 <input
                   className='formInputSmall'
                   type='number'
-                  id='longitude'
+                  id='lng'
                   value={geolocation.lng}
                   onChange={onMutate}
                   required

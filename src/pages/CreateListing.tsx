@@ -146,16 +146,12 @@ const CreateListing: React.FC = () => {
       return toast.error('Images not uploaded')
     })
 
-    console.log(imgUrls)
-    console.log(formData)
-
     const formDataCopy = {
       ...formData,
       imageUrls: imgUrls,
       timestamp: serverTimestamp(),
     }
 
-    console.log(formDataCopy)
     !formDataCopy.offer && delete formDataCopy.discountedPrice
 
     const docRef = await addDoc(collection(db, 'listings'), formDataCopy)

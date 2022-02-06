@@ -3,6 +3,7 @@ import { ReactComponent as DeleteIcon } from 'assets/svg/deleteIcon.svg'
 import bedIcon from 'assets/svg/bedIcon.svg'
 import bathtubIcon from 'assets/svg/bathtubIcon.svg'
 import { IListing } from 'utils/SharedUtils'
+import { formatPriceNumber } from 'utils/CommonFunctions'
 
 interface IListingItemProps {
   listing: IListing
@@ -22,10 +23,6 @@ const ListingItem: React.FC<IListingItemProps> = ({ listing, onDelete }) => {
     offer,
     type,
   } = listing
-
-  const formatPriceNumber = (price: number): string => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  }
 
   return (
     <li className='categoryListing'>

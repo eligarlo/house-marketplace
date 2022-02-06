@@ -8,6 +8,7 @@ import SignUp from 'pages/SignUp'
 import ForgotPassword from 'pages/ForgotPassword'
 import CreateListing from 'pages/CreateListing'
 import Listing from 'pages/Listing'
+import Contact from 'pages/Contact'
 import PrivateRoute from 'components/PrivateRoute'
 
 const Routes: React.FC = () => {
@@ -48,6 +49,10 @@ const Routes: React.FC = () => {
     {
       path: 'category/:categoryName/:listingId',
       element: <Listing />,
+    },
+    {
+      path: '/contact/:landlordId',
+      element: <Contact />,
     },
   ])
 

@@ -36,7 +36,10 @@ const ListingItem: React.FC<IListingItemProps> = ({ listing, onDelete }) => {
           <p className='categoryListingName'>{name}</p>
 
           <p className='categoryListingPrice'>
-            ${offer ? formatPriceNumber(discountedPrice) : formatPriceNumber(regularPrice)}
+            $
+            {offer
+              ? discountedPrice && formatPriceNumber(discountedPrice)
+              : formatPriceNumber(regularPrice)}
             {type === 'rent' && ' / Month'}
           </p>
           <div className='categoryListingInfoDiv'>

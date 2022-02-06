@@ -18,7 +18,7 @@ export interface IListing {
   bathrooms: number
   bedrooms: number
   regularPrice: number
-  discountedPrice: number
+  discountedPrice: number | undefined
   furnished: boolean
   geolocation: IGeolocation
   imageUrls: string[]

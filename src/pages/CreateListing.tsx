@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { db } from 'firebase.config'
 import { v4 as uuidv4 } from 'uuid'
 import Spinner from 'components/Spinner'
-import { IImageUpload, IListing } from 'utils/SharedUtils'
+import { IListing } from 'utils/SharedUtils'
 import { toast } from 'react-toastify'
 
 const CreateListing: React.FC = () => {
@@ -68,7 +69,7 @@ const CreateListing: React.FC = () => {
     e.preventDefault()
     setLoading(true)
 
-    if (discountedPrice >= regularPrice) {
+    if (discountedPrice && discountedPrice >= regularPrice) {
       setLoading(false)
       return toast.error('Discounted price needs to be less than regular price')
     }
@@ -145,7 +146,22 @@ const CreateListing: React.FC = () => {
       return toast.error('Images not uploaded')
     })
 
+    console.log(imgUrls)
+    console.log(formData)
+
+    const formDataCopy = {
+      ...formData,
+      imageUrls: imgUrls,
+      timestamp: serverTimestamp(),
+    }
+
+    console.log(formDataCopy)
+    !formDataCopy.offer && delete formDataCopy.discountedPrice
+
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
     setLoading(false)
+    toast.success('Listing saved')
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
   }
 
   const onMutate = (e: any) => {

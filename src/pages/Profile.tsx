@@ -112,6 +112,8 @@ const Profile: React.FC = () => {
     }
   }
 
+  const handleOnEdit = (listingId: string) => navigate(`/edit-listing/${listingId}`)
+
   if (loading) {
     return <Spinner />
   }
@@ -158,7 +160,12 @@ const Profile: React.FC = () => {
             <p className='listingText'>Your listings</p>
             <ul className='listingsList'>
               {listings.map(listing => (
-                <ListingItem key={listing.id} listing={listing} onDelete={handleOnDelete} />
+                <ListingItem
+                  key={listing.id}
+                  listing={listing}
+                  onDelete={handleOnDelete}
+                  onEdit={handleOnEdit}
+                />
               ))}
             </ul>
           </>

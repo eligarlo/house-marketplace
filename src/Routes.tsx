@@ -7,6 +7,7 @@ import SignIn from 'pages/SignIn'
 import SignUp from 'pages/SignUp'
 import ForgotPassword from 'pages/ForgotPassword'
 import CreateListing from 'pages/CreateListing'
+import EditListing from 'pages/EditListing'
 import Listing from 'pages/Listing'
 import Contact from 'pages/Contact'
 import PrivateRoute from 'components/PrivateRoute'
@@ -45,6 +46,10 @@ const Routes: React.FC = () => {
     {
       path: '/create-listing',
       element: <CreateListing />,
+    },
+    {
+      path: '/edit-listing/:listingId',
+      element: <EditListing />,
     },
     {
       path: 'category/:categoryName/:listingId',

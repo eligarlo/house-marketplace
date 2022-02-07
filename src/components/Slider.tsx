@@ -47,6 +47,10 @@ const Slider: React.FC = () => {
     return <Spinner />
   }
 
+  if (listings.length === 0) {
+    return <></>
+  }
+
   return (
     listings && (
       <>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ReactComponent as DeleteIcon } from 'assets/svg/deleteIcon.svg'
+import { ReactComponent as EditIcon } from 'assets/svg/editIcon.svg'
 import bedIcon from 'assets/svg/bedIcon.svg'
 import bathtubIcon from 'assets/svg/bathtubIcon.svg'
 import { IListing } from 'utils/SharedUtils'
@@ -7,10 +8,11 @@ import { formatPriceNumber } from 'utils/CommonFunctions'
 
 interface IListingItemProps {
   listing: IListing
-  onDelete?: (id: string, name: string) => void
+  onDelete?: (id: string) => void
+  onEdit?: (id: string) => void
 }
 
-const ListingItem: React.FC<IListingItemProps> = ({ listing, onDelete }) => {
+const ListingItem: React.FC<IListingItemProps> = ({ listing, onDelete, onEdit }) => {
   const {
     id,
     bathrooms,
@@ -56,9 +58,11 @@ const ListingItem: React.FC<IListingItemProps> = ({ listing, onDelete }) => {
         <DeleteIcon
           className='removeIcon'
           fill='rgb(231, 76, 60'
-          onClick={() => id && onDelete(id, name)}
+          onClick={() => id && onDelete(id)}
         />
       )}
+
+      {onEdit && <EditIcon className='editIcon' onClick={() => id && onEdit(id)} />}
     </li>
   )
 }

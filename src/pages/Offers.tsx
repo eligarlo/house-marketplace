@@ -1,6 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { collection, getDocs, query, where, orderBy, limit, startAfter } from 'firebase/firestore'
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
+  QueryDocumentSnapshot,
+  DocumentData,
+} from 'firebase/firestore'
 import { db } from 'firebase.config'
 import { toast } from 'react-toastify'
 import Spinner from 'components/Spinner'
@@ -9,7 +19,10 @@ import { IListing } from 'utils/SharedUtils'
 
 const Offers: React.FC = () => {
   const [listings, setListings] = useState<IListing[]>([] as IListing[])
+  const [lastFetchListing, setLastFetchListing] =
+    useState<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const fetchMaxResults = 10
 
   const params = useParams()
 
@@ -24,18 +37,21 @@ const Offers: React.FC = () => {
           listingsRef,
           where('offer', '==', true),
           orderBy('timestamp', 'desc'),
-          limit(10)
+          limit(fetchMaxResults)
         )
 
         // Execute the query
         const querySnap = await getDocs(q)
 
-        const listings: any = []
+        const lastVisible = querySnap.docs[querySnap.docs.length - 1]
+        setLastFetchListing(lastVisible)
+
+        const listings = [] as IListing[]
 
         querySnap.forEach(doc => {
           return listings.push({
             id: doc.id,
-            ...doc.data(),
+            ...(doc.data() as IListing),
           })
         })
 
@@ -49,6 +65,43 @@ const Offers: React.FC = () => {
     fetchListings()
   }, [])
 
+  // Pagination / Load More
+  const onFetchMoreListings = async () => {
+    try {
+      // Get references
+      const listingsRef = collection(db, 'listings')
+
+      // Create a query
+      const q = query(
+        listingsRef,
+        where('offer', '==', true),
+        orderBy('timestamp', 'desc'),
+        startAfter(lastFetchListing),
+        limit(fetchMaxResults)
+      )
+
+      // Execute the query
+      const querySnap = await getDocs(q)
+
+      const lastVisible = querySnap.docs[querySnap.docs.length - 1]
+      setLastFetchListing(lastVisible)
+
+      const listings = [] as IListing[]
+
+      querySnap.forEach(doc => {
+        return listings.push({
+          id: doc.id,
+          ...(doc.data() as IListing),
+        })
+      })
+
+      setListings(prevState => [...prevState, ...listings])
+      setIsLoading(false)
+    } catch (error) {
+      toast.error('Could not fetch listings')
+    }
+  }
+
   return (
     <div className='category'>
       <header>
@@ -58,13 +111,23 @@ const Offers: React.FC = () => {
       {isLoading ? (
         <Spinner />
       ) : listings && listings.length > 0 ? (
-        <main>
-          <ul className='categoryListings'>
-            {listings.map(listing => (
-              <ListingItem key={listing.id} listing={listing} />
-            ))}
-          </ul>
-        </main>
+        <>
+          <main>
+            <ul className='categoryListings'>
+              {listings.map(listing => (
+                <ListingItem key={listing.id} listing={listing} />
+              ))}
+            </ul>
+          </main>
+
+          <br />
+          <br />
+          {lastFetchListing && (
+            <p className='loadMore' onClick={onFetchMoreListings}>
+              Load more
+            </p>
+          )}
+        </>
       ) : (
         <p>There are no current offers</p>
       )}

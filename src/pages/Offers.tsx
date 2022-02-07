@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import {
   collection,
   getDocs,
@@ -23,8 +22,6 @@ const Offers: React.FC = () => {
     useState<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const fetchMaxResults = 10
-
-  const params = useParams()
 
   useEffect(() => {
     const fetchListings = async () => {

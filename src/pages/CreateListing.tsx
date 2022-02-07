@@ -10,6 +10,7 @@ import { IListing } from 'utils/SharedUtils'
 import { toast } from 'react-toastify'
 
 const CreateListing: React.FC = () => {
+  // eslint-disable-next-line
   const [geolocationEnabled, setGeolocationEnabled] = useState<boolean>(true)
   const [isLoading, setLoading] = useState<boolean>(false)
   const [files, setFiles] = useState<[]>([])
@@ -117,6 +118,8 @@ const CreateListing: React.FC = () => {
               case 'running':
                 console.log('Upload is running')
                 break
+              default:
+                break
             }
           },
           error => {
@@ -129,6 +132,8 @@ const CreateListing: React.FC = () => {
                 break
               case 'storage/unknown':
                 reject('storage not found')
+                break
+              default:
                 break
             }
           },
